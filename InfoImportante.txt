@@ -1,0 +1,11 @@
+compilar programa C no vscode ou terminal: gcc [nome].c -o [nome]
+
+rodar arquivo C no vscode: ./[nome].exe 
+
+rodar arquivo C no terminal usando pub.in: ./[nome] <pub.in>saida.out  /// pub.in e saida.out são os nomes dos arquivos txt
+
+compilar arquivo java no vs code: javac [nome].java /// Se não der certo, tentar: javac -d . [nome].java
+ 
+rodar arquivo java no vs code: java [nome do pacote].[nome do programa] /// lembra de mover um diretorio acima do pacote que ele irá procurar
+
+abrir postgre: sudo -i -u postgres /// senha: dedeco30
