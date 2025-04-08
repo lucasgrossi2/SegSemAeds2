@@ -155,6 +155,15 @@ public class q1 {
         }
 
         public void ler(String baseID){
+            /*você tava tendando fazer o metodo checar o id de cada linha e executar so na linha com id correto
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             */
             String path = "disneyplus.csv";
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                 String line;
