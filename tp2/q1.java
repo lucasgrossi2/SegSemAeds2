@@ -150,46 +150,55 @@ public class q1 {
             this.listed_in = listed_in;
         }
 
+        public shows clone(){
+            return new shows(this.show_id, this.type, this.title, this.director, this.cast, this.country, this.date_added, this.release_year, this.rating, this.duration, this.listed_in);
+        }
 
+        public void ler(String baseID){
+            String path = "disneyplus.csv";
+            try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+                String line;
+                    String[] fields = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                    for(int i = 0; i < fields.length; i++){
+                        if (fields[i].isEmpty()) {
+                            fields[i] = "NaN";
+                        }
+                    } 
+                    for(int i = 0; i < fields.length; i++){
+                        fields[i] = fields[i].trim();
+                    }
+                    for(int i = 0; i < fields.length; i++){
+                        fields[i] = fields[i].replaceAll("^\"|\"$", "");
+                    }  
+                    
+                    String[] cast = fields[4].split(",\\s*");
+                    String[] listed_in = fields[10].split(",\\s*");
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy");
+                    Date dateAdded = null;
+                    try {
+                        if (!fields[6].equals("NaN")) {
+                            dateAdded = formatter.parse(fields[6]);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace(); // or handle the error in some other way
+                    }
+                    int releaseYear = 0;
+                    if (!fields[7].equals("NaN")) {
+                        releaseYear = Integer.parseInt(fields[7]);
+                    }
+
+                    shows show = new shows(fields[0], fields[1], fields[2], fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in);
+            }
+        }
     }
     public static void main(String args[]){
-        String path = "disneyplus.csv";
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line;
-            while ((line = br.readLine()) != "FIM"){
-                String[] fields = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                for(int i = 0; i < fields.length; i++){
-                    if (fields[i].isEmpty()) {
-                        fields[i] = "NaN";
-                    }
-                } 
-                for(int i = 0; i < fields.length; i++){
-                    fields[i] = fields[i].trim();
-                }
-                for(int i = 0; i < fields.length; i++){
-                    fields[i] = fields[i].replaceAll("^\"|\"$", "");
-                }  
-                
-                String[] cast = fields[4].split(",\\s*");
-                String[] listed_in = fields[10].split(",\\s*");
-
-                SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy");
-                Date dateAdded = null;
-                try {
-                    if (!fields[6].equals("NaN")) {
-                        dateAdded = formatter.parse(fields[6]);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace(); // or handle the error in some other way
-                }
-                int releaseYear = 0;
-                if (!fields[7].equals("NaN")) {
-                    releaseYear = Integer.parseInt(fields[7]);
-                }
-
-                shows show = new shows(fields[0], fields[1], fields[2], fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in);
-            }
-        } 
-        
+        Scanner sc = new Scanner(System.in);
+        String id = sc.nextLine();
+        while(id != "FIM"){
+            ler(id);
+            id = sc.nextLine();
+        }
+        sc.close();
     }
 }
