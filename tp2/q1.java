@@ -1,8 +1,8 @@
 package tp2;
 
 import java.util.*;
-import java.util.Date;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -154,59 +154,80 @@ public class q1 {
             return new shows(this.show_id, this.type, this.title, this.director, this.cast, this.country, this.date_added, this.release_year, this.rating, this.duration, this.listed_in);
         }
 
-        public void ler(String baseID){
-            /*você tava tendando fazer o metodo checar o id de cada linha e executar so na linha com id correto
-             * 
-             * 
-             * 
-             * 
-             * 
-             * 
-             * 
-             */
-            String path = "disneyplus.csv";
+        public static shows ler(String baseID){
+            //String path = "tp2/disneyplus.csv";
+            String path = "/tmp/disneyplus.csv";
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                 String line;
-                    String[] fields = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                    for(int i = 0; i < fields.length; i++){
-                        if (fields[i].isEmpty()) {
-                            fields[i] = "NaN";
+                while((line = br.readLine()) != null){
+                    if(line.startsWith(baseID + ",")){
+                        String[] fields = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                        for(int i = 0; i < fields.length; i++){
+                            if (fields[i].isEmpty()) {
+                                fields[i] = "NaN";
+                            }
+                        } 
+                        for(int i = 0; i < fields.length; i++){
+                            fields[i] = fields[i].trim();
                         }
-                    } 
-                    for(int i = 0; i < fields.length; i++){
-                        fields[i] = fields[i].trim();
+                        for(int i = 0; i < fields.length; i++){
+                            fields[i] = fields[i].replaceAll("^\"|\"$", "");
+                        }  
+                        
+                        String[] cast = fields[4].split(",\\s*");
+                        String[] listed_in = fields[10].split(",\\s*");
+    
+                        SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+                        Date dateAdded = null;
+                        try {
+                            if (!fields[6].equals("NaN")) {
+                                dateAdded = formatter.parse(fields[6]);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace(); // or handle the error in some other way
+                        }
+                        int releaseYear = 0;
+                        if (!fields[7].equals("NaN")) {
+                            releaseYear = Integer.parseInt(fields[7]);
+                        }
+    
+                        shows show = new shows(fields[0], fields[1], fields[2], fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in); 
+                        return show;
                     }
-                    for(int i = 0; i < fields.length; i++){
-                        fields[i] = fields[i].replaceAll("^\"|\"$", "");
-                    }  
                     
-                    String[] cast = fields[4].split(",\\s*");
-                    String[] listed_in = fields[10].split(",\\s*");
-
-                    SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy");
-                    Date dateAdded = null;
-                    try {
-                        if (!fields[6].equals("NaN")) {
-                            dateAdded = formatter.parse(fields[6]);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace(); // or handle the error in some other way
-                    }
-                    int releaseYear = 0;
-                    if (!fields[7].equals("NaN")) {
-                        releaseYear = Integer.parseInt(fields[7]);
-                    }
-
-                    shows show = new shows(fields[0], fields[1], fields[2], fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in);
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + path);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            return null;
+        }
+
+        public static void imprimir(String baseID){
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+            shows printableShow = ler(baseID);
+            /*System.out.println("[0] " + printableShow.show_id);
+            System.out.println("[1] " + printableShow.type);
+            System.out.println("[2] " + printableShow.title);
+            System.out.println("[3] " + printableShow.director);
+            System.out.println("[4] [" + String.join(", ", printableShow.cast) + "]");
+            System.out.println("[5] " + printableShow.country);
+            System.out.println("[6] " + outputFormat.format(printableShow.date_added));
+            System.out.println("[7] " + printableShow.release_year);
+            System.out.println("[8] " + printableShow.rating);
+            System.out.println("[9] " + printableShow.duration);
+            System.out.println("[10] " + String.join(", ", printableShow.listed_in));*/
+            System.out.println("=> " + printableShow.show_id + " ## " + printableShow.title + " ## " + printableShow.type + " ## " + printableShow.director + " ## [" + String.join(", ", printableShow.cast) + "] ## " + printableShow.country + " ## " + outputFormat.format(printableShow.date_added) + " ## " + printableShow.release_year + " ## " + printableShow.rating + " ## " + printableShow.duration + " ## [" + String.join(", ", printableShow.listed_in) + "] ##");
         }
     }
     public static void main(String args[]){
         Scanner sc = new Scanner(System.in);
-        String id = sc.nextLine();
-        while(id != "FIM"){
-            ler(id);
-            id = sc.nextLine();
+        String baseID = "a";
+        baseID = sc.nextLine();
+        while(!baseID.equals("FIM")){
+            shows.imprimir(baseID);
+            baseID = sc.nextLine();
         }
         sc.close();
     }
