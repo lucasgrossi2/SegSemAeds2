@@ -1,4 +1,4 @@
-//package tp2;
+
 
 import java.util.*;
 import java.io.BufferedReader;
@@ -155,7 +155,7 @@ public class q1 {
         }
 
         public static shows ler(String baseID){
-            //String path = "tp2/disneyplus.csv";
+            //String path = "disneyplus.csv";
             String path = "/tmp/disneyplus.csv";
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                 String line;
@@ -175,7 +175,9 @@ public class q1 {
                         }  
                         
                         String[] cast = fields[4].split(",\\s*");
+                        insertionSort(cast);
                         String[] listed_in = fields[10].split(",\\s*");
+                        insertionSort(listed_in);
     
                         SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
                         Date dateAdded = null;
@@ -207,18 +209,21 @@ public class q1 {
         public static void imprimir(String baseID){
             SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
             shows printableShow = ler(baseID);
-            /*System.out.println("[0] " + printableShow.show_id);
-            System.out.println("[1] " + printableShow.type);
-            System.out.println("[2] " + printableShow.title);
-            System.out.println("[3] " + printableShow.director);
-            System.out.println("[4] [" + String.join(", ", printableShow.cast) + "]");
-            System.out.println("[5] " + printableShow.country);
-            System.out.println("[6] " + outputFormat.format(printableShow.date_added));
-            System.out.println("[7] " + printableShow.release_year);
-            System.out.println("[8] " + printableShow.rating);
-            System.out.println("[9] " + printableShow.duration);
-            System.out.println("[10] " + String.join(", ", printableShow.listed_in));*/
             System.out.println("=> " + printableShow.show_id + " ## " + printableShow.title + " ## " + printableShow.type + " ## " + printableShow.director + " ## [" + String.join(", ", printableShow.cast) + "] ## " + printableShow.country + " ## " + outputFormat.format(printableShow.date_added) + " ## " + printableShow.release_year + " ## " + printableShow.rating + " ## " + printableShow.duration + " ## [" + String.join(", ", printableShow.listed_in) + "] ##");
+        }
+    }
+
+    public static void insertionSort(String[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            String key = arr[i];
+            int j = i - 1;
+
+            while (j >= 0 && arr[j].compareToIgnoreCase(key) > 0) {
+                arr[j + 1] = arr[j];
+                j = j - 1;
+            }
+
+            arr[j + 1] = key;
         }
     }
     public static void main(String args[]){
