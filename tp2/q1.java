@@ -1,4 +1,4 @@
-package tp2;
+//package tp2;
 
 import java.util.*;
 import java.io.BufferedReader;
