@@ -38,17 +38,17 @@ public class q1 {
         }
 
         private shows(){
-            this.show_id = show_id;
-            this.type = type;
-            this.title = title;
-            this.director = director;
-            this.cast = cast;
-            this.country = country;
-            this.date_added = date_added;
-            this.release_year = release_year;
-            this.rating = rating;
-            this.duration = duration;
-            this.listed_in = listed_in;
+            this.show_id = null;
+            this.type = null;
+            this.title = null;
+            this.director = null;
+            this.cast = null;
+            this.country = null;
+            this.date_added = null;
+            this.release_year = -1;
+            this.rating = null;
+            this.duration = null;
+            this.listed_in = null;
         }
 
         // Getter and Setter for show_id
@@ -174,9 +174,12 @@ public class q1 {
                             fields[i] = fields[i].replaceAll("^\"|\"$", "");
                         }  
                         
-                        String[] cast = fields[4].split(",\\s*");
+                        String castToSplit = fields[4].replace("\"", "");
+                        String listed_inToSplit = fields[10].replace("\"", "");
+
+                        String[] cast = castToSplit.split(",\\s*");
                         insertionSort(cast);
-                        String[] listed_in = fields[10].split(",\\s*");
+                        String[] listed_in = listed_inToSplit.split(",\\s*");
                         insertionSort(listed_in);
     
                         SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
@@ -192,8 +195,10 @@ public class q1 {
                         if (!fields[7].equals("NaN")) {
                             releaseYear = Integer.parseInt(fields[7]);
                         }
-    
-                        shows show = new shows(fields[0], fields[1], fields[2], fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in); 
+                        
+                        String noDoubleQuotes = fields[2].replace("\"", "");
+
+                        shows show = new shows(fields[0], fields[1], noDoubleQuotes, fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in); 
                         return show;
                     }
                     

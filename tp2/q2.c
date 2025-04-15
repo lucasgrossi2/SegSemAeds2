@@ -36,7 +36,15 @@ char* separador(char* line){
 }
 
 char separadorAspas(char* line){
-
+    //FAZER O SEPARADOR DE ASPAS!!!!!!!!!!!!!!!
+    /*
+    
+    
+    DSASADADS
+    ADSADSAD
+    ASDS
+    
+    */
 }
 
 shows ler(char* base_id) {
