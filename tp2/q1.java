@@ -1,8 +1,8 @@
-package tp2;
+
 
 import java.util.*;
-import java.util.Date;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
@@ -38,17 +38,17 @@ public class q1 {
         }
 
         private shows(){
-            this.show_id = show_id;
-            this.type = type;
-            this.title = title;
-            this.director = director;
-            this.cast = cast;
-            this.country = country;
-            this.date_added = date_added;
-            this.release_year = release_year;
-            this.rating = rating;
-            this.duration = duration;
-            this.listed_in = listed_in;
+            this.show_id = null;
+            this.type = null;
+            this.title = null;
+            this.director = null;
+            this.cast = null;
+            this.country = null;
+            this.date_added = null;
+            this.release_year = -1;
+            this.rating = null;
+            this.duration = null;
+            this.listed_in = null;
         }
 
         // Getter and Setter for show_id
@@ -154,59 +154,90 @@ public class q1 {
             return new shows(this.show_id, this.type, this.title, this.director, this.cast, this.country, this.date_added, this.release_year, this.rating, this.duration, this.listed_in);
         }
 
-        public void ler(String baseID){
-            /*você tava tendando fazer o metodo checar o id de cada linha e executar so na linha com id correto
-             * 
-             * 
-             * 
-             * 
-             * 
-             * 
-             * 
-             */
-            String path = "disneyplus.csv";
+        public static shows ler(String baseID){
+            //String path = "disneyplus.csv";
+            String path = "/tmp/disneyplus.csv";
             try (BufferedReader br = new BufferedReader(new FileReader(path))) {
                 String line;
-                    String[] fields = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                    for(int i = 0; i < fields.length; i++){
-                        if (fields[i].isEmpty()) {
-                            fields[i] = "NaN";
+                while((line = br.readLine()) != null){
+                    if(line.startsWith(baseID + ",")){
+                        String[] fields = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                        for(int i = 0; i < fields.length; i++){
+                            if (fields[i].isEmpty()) {
+                                fields[i] = "NaN";
+                            }
+                        } 
+                        for(int i = 0; i < fields.length; i++){
+                            fields[i] = fields[i].trim();
                         }
-                    } 
-                    for(int i = 0; i < fields.length; i++){
-                        fields[i] = fields[i].trim();
+                        for(int i = 0; i < fields.length; i++){
+                            fields[i] = fields[i].replaceAll("^\"|\"$", "");
+                        }  
+                        
+                        String castToSplit = fields[4].replace("\"", "");
+                        String listed_inToSplit = fields[10].replace("\"", "");
+
+                        String[] cast = castToSplit.split(",\\s*");
+                        insertionSort(cast);
+                        String[] listed_in = listed_inToSplit.split(",\\s*");
+                        insertionSort(listed_in);
+    
+                        SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+                        Date dateAdded = null;
+                        try {
+                            if (!fields[6].equals("NaN")) {
+                                dateAdded = formatter.parse(fields[6]);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace(); // or handle the error in some other way
+                        }
+                        int releaseYear = 0;
+                        if (!fields[7].equals("NaN")) {
+                            releaseYear = Integer.parseInt(fields[7]);
+                        }
+                        
+                        String noDoubleQuotes = fields[2].replace("\"", "");
+
+                        shows show = new shows(fields[0], fields[1], noDoubleQuotes, fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in); 
+                        return show;
                     }
-                    for(int i = 0; i < fields.length; i++){
-                        fields[i] = fields[i].replaceAll("^\"|\"$", "");
-                    }  
                     
-                    String[] cast = fields[4].split(",\\s*");
-                    String[] listed_in = fields[10].split(",\\s*");
-
-                    SimpleDateFormat formatter = new SimpleDateFormat("MMMM d, yyyy");
-                    Date dateAdded = null;
-                    try {
-                        if (!fields[6].equals("NaN")) {
-                            dateAdded = formatter.parse(fields[6]);
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace(); // or handle the error in some other way
-                    }
-                    int releaseYear = 0;
-                    if (!fields[7].equals("NaN")) {
-                        releaseYear = Integer.parseInt(fields[7]);
-                    }
-
-                    shows show = new shows(fields[0], fields[1], fields[2], fields[3], cast, fields[5], dateAdded, releaseYear, fields[8], fields[9], listed_in);
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found: " + path);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            return null;
+        }
+
+        public static void imprimir(String baseID){
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+            shows printableShow = ler(baseID);
+            System.out.println("=> " + printableShow.show_id + " ## " + printableShow.title + " ## " + printableShow.type + " ## " + printableShow.director + " ## [" + String.join(", ", printableShow.cast) + "] ## " + printableShow.country + " ## " + outputFormat.format(printableShow.date_added) + " ## " + printableShow.release_year + " ## " + printableShow.rating + " ## " + printableShow.duration + " ## [" + String.join(", ", printableShow.listed_in) + "] ##");
+        }
+    }
+
+    public static void insertionSort(String[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            String key = arr[i];
+            int j = i - 1;
+
+            while (j >= 0 && arr[j].compareToIgnoreCase(key) > 0) {
+                arr[j + 1] = arr[j];
+                j = j - 1;
+            }
+
+            arr[j + 1] = key;
         }
     }
     public static void main(String args[]){
         Scanner sc = new Scanner(System.in);
-        String id = sc.nextLine();
-        while(id != "FIM"){
-            ler(id);
-            id = sc.nextLine();
+        String baseID = "a";
+        baseID = sc.nextLine();
+        while(!baseID.equals("FIM")){
+            shows.imprimir(baseID);
+            baseID = sc.nextLine();
         }
         sc.close();
     }

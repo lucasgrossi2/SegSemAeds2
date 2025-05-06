@@ -1,8 +1,6 @@
-package beecrowd;
-
 import java.util.*;
 
-public class b1382{
+public class bee1382{
 
     public static void insertionSort(int[] arr){
         int trocas = 0;
@@ -14,9 +12,10 @@ public class b1382{
             while(j >= 0 && arr[j] > key){
                 arr[j+1] = arr[j];
                 j--;
+                trocas++;
             }
             arr[j+1] = key;
-            trocas++;
+            
         }
         System.out.println(trocas);
     }
@@ -35,4 +34,5 @@ public class b1382{
         sc.close();
     }
 }
+
 
