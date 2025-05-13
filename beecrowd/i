@@ -1,0 +1,92 @@
+/*Inserção C:
+
+void insertionSort(int arr[], int size){
+    int i, j, key;
+    for (i = 1; i < size; i++) {
+        key = arr[i];
+        j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+
+Inserção Java:
+
+public void insertionSort(int[] vetor){
+		for (int i = 1; i < vetor.length; i++){
+			int aux = vetor[i];
+			int j = i;
+			while ((j > 0) && (vetor[j-1] > aux)){
+				vetor[j] = vetor[j-1];
+				j -= 1;
+			}
+			vetor[j] = aux;
+		}
+	}
+
+Selection C:
+
+void selection_sort(int num[], int tam) { 
+  int i, j, min, aux;
+  for (i = 0; i < (tam-1); i++) 
+  {
+     min = i;
+     for (j = (i+1); j < tam; j++) {
+       if(num[j] < num[min]) 
+         min = j;
+     }
+     if (i != min) {
+       aux = num[i];
+       num[i] = num[min];
+       num[min] = aux;
+     }
+  }
+}
+
+Selection java:
+
+public static void selectionSort(int[] v) {	
+	for (int i = 0; i < v.length; i++) {
+		int i_menor = i;
+		for (int j = i + 1; j < v.length; j++){
+			if (v[j] < v[i_menor])
+				i_menor = j;
+              }
+		int aux = v[i];
+		v[i] = v[i_menor];
+		v[i_menor] = aux;
+	}		
+}
+
+Bubble C:
+
+void swap(int *a, int *b){ 
+    int temp = *a; 
+    *a = *b; 
+    *b = temp; 
+} 
+
+void bubbleSort(int *v, int n){ 
+    if (n < 1)return; 
+    for (int i=0; i<n; i++) 
+        if (v[i] > v[i+1]) 
+            swap(&v[i], &v[i+1]);  
+    bubbleSort(v, n-1); 
+} 
+
+Bubble java:
+
+int aux;
+for (int i=0; i < numeros.length; ++i){
+    for (int j=i; j < numeros.length; ++j){
+        if (numeros[i]>numeros[j]){
+            aux = numeros[i];
+            numeros[i] = numeros[j];
+            numeros[j] = aux;
+            }
+        }
+    }
+*/
