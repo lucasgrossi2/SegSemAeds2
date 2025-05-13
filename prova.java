@@ -106,10 +106,41 @@ class Date{
     }
     }
 
-public class Jogador {
+public class prova {
     public static void main(String[] args){
-
+        Scanner sc = new Scanner(System.in);
         Jogadores jogadores[] = new Jogadores[1000];
+        Jogadores jogador = new Jogadores();
+        String input = sc.nextLine();
+        int contador = 0;
+        while(!input.equals("FIM")){
+            jogador.ler(input);
+            jogadores[contador] = jogador;
+            contador++;
+            input = sc.nextLine();
+        }
+        Lista lista = new Lista(contador);
 
+        for(int i = 0; i < contador; i++){
+            lista.inserir(jogadores[i]);
+        }
+
+        String input2 = sc.nextLine();
+        while(!input2.equals("FIM")){
+            int achou = 0;
+            for(int i = 0; i < contador; i++){
+                String aux = jogadores[contador].nome;
+                if(aux.equals(input2)){
+                    achou++;
+                }
+            }
+            if(achou > 0){
+                System.out.println("SIM\n");
+            } else {
+                System.out.println("NAO\n");
+            }
+        }
+
+        sc.close();
     }
 }
